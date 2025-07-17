@@ -19,6 +19,7 @@ type JournalHeader struct {
 	LineCount         int
 	TotalQty          float64
 	TotalAmount       float64
+	Justification     string    `form_read_only:"1"`
 	Created           time.Time `form_kind:"datetime" form_read_only:"1" grid:"hide" form_section:"Time Info" form_section_auto_col:"2"`
 	LastUpdate        time.Time `form_kind:"datetime" form_read_only:"1" grid:"hide" form_section:"Time Info"`
 }

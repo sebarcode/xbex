@@ -12,7 +12,7 @@
             "program": "${workspaceFolder}/app/setup/main.go",
             "cwd": "${workspaceFolder}",
             "env": {},
-            "args": ["-config=${workspaceFolder}/devops/local/app.yml","-pass=Passsword.1"]
+            "args": ["-config=${workspaceFolder}/devops/local/app.yml","-pass=Password.1"]
         },
         {
             "name": "Setup Database",

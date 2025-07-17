@@ -14,11 +14,10 @@ import (
 )
 
 var (
-	appName         = "core-rest"
-	basePoint       = "api/core"
+	appName         = "invent-rest"
+	basePoint       = "api/invent"
 	version         = "v1.0.0"
-	serviceNameRest = "core-rest"
-	serviceNameEv   = "core-event"
+	serviceNameRest = "invent-rest"
 	app             *rayiapp.App
 	logWriter       = kaos.CreateLogWithPrefix("core-rest")
 	configFile      = flag.String("config", "app.yml", "path to config file")
@@ -35,7 +34,7 @@ func main() {
 	app, err = rayiapp.CreateApp(*configFile, &rayiapp.AppOpts{
 		Logger:     logWriter,
 		Apps:       []string{serviceNameRest},
-		Publishers: []string{serviceNameEv},
+		Publishers: []string{"x"},
 	})
 
 	app.Service().SetBasePoint(basePoint)
@@ -44,7 +43,7 @@ func main() {
 		app.Exit(-1, err.Error())
 	}
 
-	if e := api.RegisterCore(app); e != nil {
+	if e := api.RegisterInvent(app); e != nil {
 		app.Exit(-1, e.Error())
 	}
 

@@ -1,17 +1,19 @@
 package api
 
 import (
-	"git.kanosolution.net/kano/kaos"
 	"github.com/ariefdarmawan/suim"
 	"github.com/sebarcode/dbmod"
+	"github.com/sebarcode/rayiapp"
+	"github.com/sebarcode/xbex/logic"
 	"github.com/sebarcode/xbex/model"
 	"github.com/sebarcode/xbex/util"
 )
 
-func RegisterCore(s *kaos.Service) error {
+func RegisterCore(app *rayiapp.App) error {
 	modDB := dbmod.New()
 	modUI := suim.New()
 
+	s := app.Service()
 	s.Group().SetMod(modUI).
 		AllowOnlyRoute("gridconfig", "formconfig").
 		Apply(
@@ -20,18 +22,22 @@ func RegisterCore(s *kaos.Service) error {
 		)
 
 	s.Group().SetMod(modDB).
-		RegisterMWs(util.MwAuth).
+		RegisterMWs(util.MwHttpAuth).
 		AllowOnlyRoute("get", "gets", "find").
 		Apply(
 			s.RegisterModel(&model.AppUser{}, "user"),
 		)
 
 	s.Group().SetMod(modUI).
-		RegisterMWs(util.MwAuth).
+		RegisterMWs(util.MwHttpAuth).
 		AllowOnlyRoute("insert", "update", "delete", "save").
 		Apply(
 			s.RegisterModel(&model.AppUser{}, "user").AllowOnlyRoute("update").RegisterMWs(util.MwCheckRole("Admin")),
 		)
+
+	s.RegisterModel(new(logic.AuthHandler), "rbac")
+
+	s.Data().Set("jwt_salt", app.Config.Data.GetString("jwt_salt"))
 
 	return nil
 }

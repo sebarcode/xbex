@@ -102,7 +102,7 @@ func doChangeRootPass(app *rayiapp.App) error {
 	// root user
 	if *changeRootPass != "" {
 		sData := app.Config.Data
-		salt := sData.GetString("secret")
+		salt := sData.GetString("jwt_salt")
 		if salt == "" {
 			logger.Error("missing: salt")
 			return nil

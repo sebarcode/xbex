@@ -4,16 +4,17 @@ go 1.24.2
 
 require (
 	git.kanosolution.net/kano/dbflex v1.3.7
-	git.kanosolution.net/kano/kaos v0.3.10-0.20250512225302-d777704ea1fa
-	github.com/ariefdarmawan/datahub v0.3.2
+	git.kanosolution.net/kano/kaos v0.3.10-0.20250717121937-e4f40abcae94
+	github.com/ariefdarmawan/datahub v0.3.3-0.20250704085709-97269e66c8c2
 	github.com/ariefdarmawan/flexpg v0.7.8
 	github.com/ariefdarmawan/suim v0.0.7
-	github.com/kanoteknologi/hd v0.1.6
+	github.com/golang-jwt/jwt/v5 v5.2.3
+	github.com/kanoteknologi/hd v0.1.7-0.20250717125633-0dac2827bb88
 	github.com/sebarcode/codekit v0.2.0
-	github.com/sebarcode/dbmod v0.1.3-0.20241104215430-04f4544433c8
+	github.com/sebarcode/dbmod v0.1.3-0.20250717130429-b3cab4f887d8
 	github.com/sebarcode/htev v0.0.3-0.20250101103715-50711aa51a13
 	github.com/sebarcode/rayiapp v0.1.1
-	go.mongodb.org/mongo-driver v1.16.0
+	go.mongodb.org/mongo-driver v1.17.4
 )
 
 require (
@@ -44,7 +45,7 @@ require (
 	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
 	golang.org/x/net v0.21.0 // indirect
 	golang.org/x/sys v0.19.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/text v0.17.0 // indirect
 	gopkg.in/ini.v1 v1.66.6 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

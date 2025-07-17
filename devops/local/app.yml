@@ -1,32 +1,32 @@
 Hosts:
-  core-api:     :38001
-  invent-api:   :38001
+  core-rest:     :38001
+  invent-rest:   :38002
   core-event:   :38501
 Connections:
   default:
     Txt: "postgres://rayi-user:PasswordRayi@localhost:5432/contohdb?sslmode=disable"
     PoolSize: 1000
     Timeout: 30
-    UseTx: false
+    UseTx: true
   rbac:
     Txt: "postgres://rayi-user:PasswordRayi@localhost:5432/contohdb?sslmode=disable"
     PoolSize: 1000
     Timeout: 30
-    UseTx: false
+    UseTx: true
   tenant:
     Txt: "postgres://rayi-user:PasswordRayi@localhost:5432/contohdb?sslmode=disable"
     PoolSize: 1000
     Timeout: 10
-    UseTx: false
+    UseTx: true
 Services:
-  core-api:
+  core-rest:
     ServerType: Rest
     Provider: kaos-http-deployer
     Secret: "Strong_secret_2025"
     Timeout: 30
     ParamType: default-mux
     Data:
-  invent-api:
+  invent-rest:
     ServerType: Rest
     Provider: kaos-http-deployer
     Secret: "Strong_secret_2025"
@@ -43,4 +43,4 @@ Services:
       require_validation: true
 Data: 
   host_base_path: "http://localhost:38000"
-  secret: "Strong_secret_2025"
+  jwt_salt: "Strong_secret_2025"
