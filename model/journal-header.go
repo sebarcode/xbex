@@ -58,5 +58,10 @@ func (o *JournalHeader) PostSave(dbflex.IConnection) error {
 	return nil
 }
 func (o *JournalHeader) Indexes() []dbflex.DbIndex {
-	return []dbflex.DbIndex{}
+	return []dbflex.DbIndex{
+		{Name: "idx_journal_type", Fields: []string{"JournalType"}},
+		{Name: "idx_posting_profile", Fields: []string{"PostingProfile"}},
+		{Name: "idx_status", Fields: []string{"Status"}},
+		{Name: "idx_journal_date", Fields: []string{"JournalDate"}},
+	}
 }

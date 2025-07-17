@@ -54,5 +54,7 @@ func (o *UnitFactor) PostSave(dbflex.IConnection) error {
 	return nil
 }
 func (o *UnitFactor) Indexes() []dbflex.DbIndex {
-	return []dbflex.DbIndex{}
+	return []dbflex.DbIndex{
+		{Name: "idx_from_unit_id", Fields: []string{"FromUnitID", "ToUnitID"}},
+	}
 }

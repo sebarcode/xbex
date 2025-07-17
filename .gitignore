@@ -1,0 +1,38 @@
+# Go build and dependency files
+/bin/
+/build/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Output of the go coverage tool
+*.coverprofile
+
+# IDE/editor files
+.vscode/*
+!.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*.bak
+
+# Dependency directories (remove the comment below if you use Go modules)
+/vendor/
+
+# Go workspace file
+go.work
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Test cache
+__debug_bin*
