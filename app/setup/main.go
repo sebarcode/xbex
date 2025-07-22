@@ -102,9 +102,9 @@ func doChangeRootPass(app *rayiapp.App) error {
 	// root user
 	if *changeRootPass != "" {
 		sData := app.Config.Data
-		salt := sData.GetString("jwt_salt")
-		if salt == "" {
-			logger.Error("missing: salt")
+		shaKey := sData.GetString("sha_key")
+		if shaKey == "" {
+			logger.Error("missing: sha_key")
 			return nil
 		}
 
@@ -123,7 +123,7 @@ func doChangeRootPass(app *rayiapp.App) error {
 			}
 		}
 
-		if err = new(logic.UserHandler).ChangePassword(db, user.ID, *changeRootPass, salt); err != nil {
+		if err = new(logic.UserHandler).ChangePassword(db, user.ID, *changeRootPass, shaKey); err != nil {
 			logger.Errorf("failed to change root password: %s", err.Error())
 			return nil
 		}

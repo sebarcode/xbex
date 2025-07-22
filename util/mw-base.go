@@ -6,10 +6,12 @@ import (
 	"reflect"
 	"slices"
 	"strings"
+	"time"
 
 	"git.kanosolution.net/kano/dbflex"
 	"git.kanosolution.net/kano/kaos"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/sebarcode/xbex/config"
 )
 
 func MwHttpAuth(ctx *kaos.Context, _ interface{}) (bool, error) {
@@ -26,11 +28,7 @@ func MwHttpAuth(ctx *kaos.Context, _ interface{}) (bool, error) {
 		return false, errors.New("invalid authorization header format")
 	}
 	tokenString := authHeader[len(bearerPrefix):]
-
-	salt, ok := ctx.Data().Get("service_jwt_salt", "").(string)
-	if !ok || salt == "" {
-		return false, errors.New("missing jwt salt")
-	}
+	salt := config.Config().JwtSalt
 
 	claims := jwt.MapClaims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
@@ -49,7 +47,15 @@ func MwHttpAuth(ctx *kaos.Context, _ interface{}) (bool, error) {
 		return false, errors.New("role not found in token")
 	}
 
-	ctx.Data().Set("reference_id", userID)
+	if claims["exp"] == nil {
+		return false, errors.New("token expiration not found")
+	}
+	if exp, ok := claims["exp"].(float64); !ok || exp < float64(time.Now().Unix()) {
+		return false, errors.New("token expired")
+	}
+
+	ctx.Data().Set("jwt_token", tokenString)
+	ctx.Data().Set("jwt_reference_id", userID)
 	ctx.Data().Set("appuser_role", role)
 
 	return true, nil
@@ -81,21 +87,14 @@ func MwLimitTake(limit int) kaos.MWFunc {
 
 		qp, ok := payload.(*dbflex.QueryParam)
 		if !ok {
-			qp = &dbflex.QueryParam{}
+			return false, errors.New("payload is not a QueryParam")
 		}
 		take := qp.Take
 		if take > limit || take == 0 {
 			qp.Take = limit
 		}
-		if payload == nil {
-			payloadPtr := reflect.New(reflect.TypeOf(*qp))
-			payloadVal := payloadPtr.Elem()
-			payloadVal.Set(reflect.ValueOf(*qp))
-			payload = payloadPtr.Interface()
-		} else {
-			val := reflect.ValueOf(payload)
-			val.Elem().Set(reflect.ValueOf(qp).Elem())
-		}
+		val := reflect.ValueOf(payload)
+		val.Elem().Set(reflect.ValueOf(qp).Elem())
 
 		return true, nil
 	}

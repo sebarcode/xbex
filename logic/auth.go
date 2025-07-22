@@ -8,6 +8,7 @@ import (
 	"github.com/ariefdarmawan/datahub"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/sebarcode/codekit"
+	"github.com/sebarcode/xbex/config"
 	"github.com/sebarcode/xbex/model"
 )
 
@@ -25,8 +26,8 @@ func (obj *AuthHandler) HttpAuth(ctx *kaos.Context, payload *string) (string, er
 	if !ok {
 		return "", errors.New("missingAuth")
 	}
-	salt := ctx.Data().Get("service_jwt_salt", "").(string)
-	saltPass := codekit.ShaString(pass, salt)
+	shaKey := config.Config().ShaKey
+	saltPass := codekit.ShaString(pass, shaKey)
 
 	meta, err := datahub.GetByID(h, new(model.AppUserMeta), userName)
 	if err != nil {
@@ -43,19 +44,15 @@ func (obj *AuthHandler) HttpAuth(ctx *kaos.Context, payload *string) (string, er
 		return "", errors.New("userNotActive")
 	}
 
-	jwtSalt := ctx.Data().Get("service_jwt_salt", "").(string)
-	if jwtSalt == "" {
-		return "", errors.New("missing jwt_salt in config")
-	}
 	claims := jwt.MapClaims{
 		"user_id": user.ID,
 		"role":    user.Role,
-		"exp":     jwt.NewNumericDate(time.Now().Add(24 * time.Hour)), // token expires in 24 hours
+		"exp":     jwt.NewNumericDate(time.Now().Add(3 * time.Hour)), // token expires in 3 hours
 	}
 
 	signMethod := jwt.GetSigningMethod("HS256")
 	token := jwt.NewWithClaims(signMethod, claims)
-	jwtStr, err := token.SignedString([]byte(jwtSalt))
+	jwtStr, err := token.SignedString([]byte(config.Config().JwtSalt))
 	if err != nil {
 		return "", errors.New("jwtSignFailed")
 	}

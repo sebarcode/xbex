@@ -3,15 +3,31 @@ package api
 import (
 	"errors"
 
+	"github.com/ariefdarmawan/serde"
 	"github.com/ariefdarmawan/suim"
 	"github.com/sebarcode/dbmod"
 	"github.com/sebarcode/rayiapp"
+	"github.com/sebarcode/xbex/config"
 	"github.com/sebarcode/xbex/logic"
 	"github.com/sebarcode/xbex/model"
 	"github.com/sebarcode/xbex/util"
 )
 
 func RegisterInvent(app *rayiapp.App) error {
+	modConfig := new(config.ModConfig)
+	err := serde.Serde(app.Config.Data, modConfig)
+	if err != nil {
+		return err
+	}
+
+	if modConfig.JwtSalt == "" {
+		return errors.New("missing jwt_salt in config")
+	}
+	if modConfig.ShaKey == "" {
+		return errors.New("missing sha_secret in config")
+	}
+	config.SetConfig(modConfig)
+
 	modUI := suim.New()
 
 	s := app.Service()

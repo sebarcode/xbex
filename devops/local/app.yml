@@ -1,6 +1,6 @@
 Hosts:
   core-rest:     :38001
-  invent-rest:   :38002
+  invent-rest:   :38021
   core-event:   :38501
 Connections:
   default:
@@ -43,4 +43,5 @@ Services:
       require_validation: true
 Data: 
   host_base_path: "http://localhost:38000"
+  sha_key: "Strong_secret_2025"
   jwt_salt: "Strong_secret_2025"

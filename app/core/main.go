@@ -34,7 +34,7 @@ func main() {
 	logWriter.Infof("initiating %s %s", appName, version)
 	app, err = rayiapp.CreateApp(*configFile, &rayiapp.AppOpts{
 		Logger:     logWriter,
-		Apps:       []string{serviceNameRest},
+		Apps:       []string{serviceNameRest, serviceNameEv},
 		Publishers: []string{serviceNameEv},
 	})
 

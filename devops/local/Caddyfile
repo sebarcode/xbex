@@ -1,2 +1,60 @@
+# 00 rest proxy, 50 http event proxy, 01 - 09 core, 10 - 49 rest service, 51 - 79 http event service, 80 - 99 admin
 :38000 {
+	header -server
+
+	header /v1/* {
+		cache-control "no-cache, no-store, no-transform, must-revalidate, private, max-age=0"
+		-server
+	}
+
+	log {
+		output stdout
+		format json
+	}
+
+	log_skip /*/__vite_ping
+	log_skip /*/node_modules/*
+	log_skip /*/static/*
+	log_skip /*/favicon.ico
+	log_skip /*/robots.txt
+	log_skip /*/src/*
+	log_skip /*/dist/*
+
+	# Proxy for Rayi Module
+	reverse_proxy /v1/core/* localhost:38001
+	reverse_proxy /v1/rbac/* localhost:38002
+	reverse_proxy /v1/msg/* localhost:38003
+	reverse_proxy /v1/asset/* localhost:38004
+
+	# Proxy for Extension Module
+	reverse_proxy /v1/invent/* localhost:38021
+
+	# Proxy for FRONTEND
+	redir / /admin/
+	redir /admin /admin/
+	reverse_proxy /admin/* localhost:38081
+	redir /pabx /pabx/
+	reverse_proxy /pabx/* localhost:19180
+
+	# Return 404 for requests that don't match any of the above routes
+	# respond /* "404 Not Found" 404
+}
+
+:38090 {
+	header -server
+	header /v1/* {
+		cache-control "no-cache, no-store, no-transform, must-revalidate, private, max-age=0"
+		-server
+	}
+
+	log {
+		output stdout
+		format json
+	}
+
+	reverse_proxy /v1/core/* localhost:38051
+	reverse_proxy /v1/rbac/* localhost:38052
+	reverse_proxy /v1/msg/* localhost:38053
+	reverse_proxy /v1/asset/* localhost:38054
+	reverse_proxy /v1/pabx/* localhost:19151
 }
